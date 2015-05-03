@@ -5,4 +5,6 @@ This webApp is meant to be a subdomain on my website which will serve as a tool 
 2. Update my scores to an sql database
 3. clear the scores in the database
 
-Once completed it should exist as gpa.kanhaprasad.com
+Once completed it should exist as gpa.kanhaprasad.com 
+
+*This app uses the web.py application framework*
