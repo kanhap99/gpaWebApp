@@ -1,0 +1,16 @@
+$def with(form)
+
+<!DOCTYPE HTML>
+<html>
+	<body>
+		<title>GPA app</title>
+	</body>
+	<head>
+		<form method = "POST">
+		    $for radio in form.options.args:
+		        <input type="radio" name="options" value=$radio> $radio</br>
+		    <input type="submit" value="Submit"> 
+		</form>
+	</head>
+
+</html>

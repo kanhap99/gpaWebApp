@@ -1,0 +1,25 @@
+$def with (n, l) 
+$#n = number of subjects, l=list of grade names 
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title> Update score log </title>
+    </head>
+    
+    <body>
+	
+	<h1>Calculate your GPA </h1>
+	<form action="/update" method="POST">
+	    $for i in range(1,n+1):
+	        Subject $i:
+                <select>
+	        $for grade in l:
+                    <option value=$grade> $grade </option>
+		</br>
+		</select>
+	    <input type="submit" value="Submit">
+	</form>
+	</br>
+	</br>
+    </body>
+</html>
