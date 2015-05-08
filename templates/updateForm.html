@@ -1,4 +1,4 @@
-$def with (n, l) 
+$def with (n, l, err=None)   
 $#n = number of subjects, l=list of grade names 
 <!DOCTYPE HTML>
 <html>
@@ -8,15 +8,16 @@ $#n = number of subjects, l=list of grade names
     
     <body>
 	
-	<h1>Calculate your GPA </h1>
+	<h1>Calculate your GPA (/4.3)</h1>
+	$if err:
+	    <p style="color:red"> $err </p>
+	</br>
 	<form action="/update" method="POST">
 	    $for i in range(1,n+1):
 	        Subject $i:
-                <select>
-	        $for grade in l:
-                    <option value=$grade> $grade </option>
-		</br>
-		</select>
+                <input name="score" type="text" autocomplete="off">
+	        </br></br>
+	    </br>
 	    <input type="submit" value="Submit">
 	</form>
 	</br>

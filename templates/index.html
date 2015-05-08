@@ -1,18 +1,16 @@
-$def with(title, form)
+$def with(form)
 
 <!DOCTYPE HTML>
 <html>
-
+	<body>
+		<title>GPA app</title>
+	</body>
 	<head>
-		<title>$title</title>
+		<form method = "POST">
+		    $for radio in form.options.args:
+		        <input type="radio" name="options" value=$radio> $radio</br>
+		    <input type="submit" value="Submit"> 
+		</form>
 	</head>
 
-	<body>
-
-		<h3> Hi!</h3>
-		<p>
-			Welcome to Kanha's awesome webpage 
-			$form.render()
-		</p>	
-	</body>
 </html>
