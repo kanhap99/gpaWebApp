@@ -1,15 +1,38 @@
-$def with (gpa)
+$def with (gpa,display,message)
 <!DOCTYPE HTML>
+<!-- 
+TODO: Pass dict as parameter
+TODO: Write code that displays dict as table
+-->
 <html>
     <head>
 	<title>Results</title>	
     </head>
     <body>
-   	<p> Your GPA = $gpa </p>
-        <p>
-            <a href = "/">
-	        Go back to main page
-	    </a>
+   	<p>
+	$if gpa: 
+	   Your GPA= $gpa
 	</p>
+	</br></br>
+	<div style="align:center">
+            $if not len(display) > 0:
+                Your progress log is empty </br></br>
+	    $else:
+	        $message
+                <table style="width:10%" border="1">
+		    <tr>
+		        <th> Date </th>
+		        <th> GPA </th>
+		    </tr>
+		    $for row in display:
+                        <tr>
+		            <td>$row</td>
+			    <td>$display[row]</td>
+		        </tr>
+	        </table>
+	</div>
+        <a href = "/">
+	    Go back to main page
+	</a>
     </body>
 </html>
