@@ -1,16 +1,18 @@
-$def with(form)
+$def with(form,err)
 
 <!DOCTYPE HTML>
 <html>
-	<body>
-		<title>GPA app</title>
-	</body>
 	<head>
+		<title>GPA app</title>
+	</head>
+	<body>
+                $if err:
+		    $err </br>
 		<form method = "POST">
 		    $for radio in form.options.args:
 		        <input type="radio" name="options" value=$radio> $radio</br>
 		    <input type="submit" value="Submit"> 
 		</form>
-	</head>
+	</body>
 
 </html>
