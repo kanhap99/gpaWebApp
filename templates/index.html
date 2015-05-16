@@ -10,7 +10,7 @@ $def with(form,err)
 		    $err </br>
 		<form method = "POST">
 		    $for radio in form.options.args:
-		        <input type="radio" name="options" value=$radio> $radio</br>
+		        <input type="radio" name="options" value=$radio checked="checked"> $radio</br>
 		    <input type="submit" value="Submit"> 
 		</form>
 	</body>

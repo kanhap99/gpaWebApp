@@ -40,19 +40,19 @@ class formpage:
     def POST(self):
         formInput = web.input()
         if formInput.options == 'Update':
-            return render.updateForm(7,update().grades.keys())  
+            return render.updateForm(8,update().grades.keys())  
 	elif formInput.options == 'Check':
-	    return check().form
+	    return check().form #form attribute of the check instance
 	elif formInput.options == 'Clear':
 	    clearCsv()
-            return """<p>Progress log was cleared successfully</p> <p> <a href="/"> Return to main page</a>"""
-	else: 
+    	    return """<title>Clear!</title><p>Progress log was cleared successfully</p> <p> <a href="/"> Return to main page</a>"""
+	elif not formInput.options: 
             return render.index(self.simpleForm,'Please choose an option')
 
 class update:
     def __init__(self):
         self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0}
-	self.n = 7 #number of subjects
+	self.n = 8 #number of subjects
 	self.table = dict()
   
     def calculate(self,scores):
