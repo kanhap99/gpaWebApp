@@ -1,17 +1,10 @@
 #!/usr/bin/env python
-import test
 import web
 import datetime
 import csv 
-import matplotlib.pyplot as plt
-import mpld3
-import pandas as pd
 import plotly.plotly as py
 from plotly.graph_objs import *
-"""
-TODO:For the check class, use mpld3 to visualize the progress
-As of now, clearing and checking are submitted to the main url to handle
-"""
+
 urls = (
     '/','formpage',
     '/update','update',
@@ -48,10 +41,6 @@ class formpage:
 	    return check().form #form attribute of the check instance
 	elif formInput.options == 'Clear':
 	    clearCsv()
-    	    return """<title>Clear!</title><p>Progress log was cleared successfully</p> <p> <a href="/"> Return to main page</a>"""
-	elif not formInput.options: 
-            return render.index(self.simpleForm,'Please choose an option')
-
 class update:
     def __init__(self):
         self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0} 
@@ -91,6 +80,7 @@ class check:
         self.display =  csvToDict()
     	self.graph = self.plot_src(self.listToDict(self.display)) 
         self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
+
     def listToDict(self,l): #converts list of dictionaries into a dictionary
         return {k:v for d in l for k,v in d.items()}
 
