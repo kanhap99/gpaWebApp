@@ -1,10 +1,13 @@
 #!/usr/bin/env python
+import test
 import web
 import datetime
 import csv 
 import matplotlib.pyplot as plt
 import mpld3
 import pandas as pd
+import plotly.plotly as py
+from plotly.graph_objs import *
 """
 TODO:For the check class, use mpld3 to visualize the progress
 As of now, clearing and checking are submitted to the main url to handle
@@ -51,7 +54,7 @@ class formpage:
 
 class update:
     def __init__(self):
-        self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0}
+        self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0} 
 	self.n = 8 #number of subjects
 	self.table = dict()
   
@@ -86,13 +89,19 @@ class update:
 class check:
     def __init__(self):
         self.display =  csvToDict()
-        self.form = render.results(None,self.display,'Your progress table is:',None) 
-    """def logToGraph(self):
-        df = pd.DataFrame({'2015-05-16':[3.94],'2015-06-16':[4.00]})
-	print df
-        fig = mpld3.fig_to_html(df.plot())
-        return fig
-    """
-    
+    	self.graph = self.plot_src(self.listToDict(self.display)) 
+        self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
+    def listToDict(self,l): #converts list of dictionaries into a dictionary
+        return {k:v for d in l for k,v in d.items()}
+
+    def plot_src(self,d): #returns the source of the plotted graph
+        line = Scatter(
+		x = d.keys(),
+		y = d.values()
+	)
+	data = Data([line])
+	URL = py.plot(data, filename = 'basic-line',auto_open=False)
+	return URL
+
 if __name__=='__main__':
     app.run()
