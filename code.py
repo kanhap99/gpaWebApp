@@ -40,6 +40,7 @@ class formpage:
 	elif formInput.options == 'Check':
 	    return check().form #form attribute of the check instance
 	elif formInput.options == 'Clear':
+	    
 	    clearCsv()
 class update:
     def __init__(self):
@@ -82,7 +83,7 @@ class check:
         self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
 
     def listToDict(self,l): #converts list of dictionaries into a dictionary
-        return {k:v for d in l for k,v in d.items()}
+        return {datetime.datetime.strptime(k,'%Y-%m-%d'):v for d in l for k,v in d.items()}
 
     def plot_src(self,d): #returns the source of the plotted graph
         line = Scatter(
