@@ -4,7 +4,7 @@ import datetime
 import csv 
 import plotly.plotly as py
 from plotly.graph_objs import *
-
+from requests.exceptions import *
 urls = (
     '/','formpage',
     '/update','update',
@@ -38,9 +38,11 @@ class formpage:
         if formInput.options == 'Update':
             return render.updateForm(8,update().grades.keys())  
 	elif formInput.options == 'Check':
-	    return check().form #form attribute of the check instance
-	elif formInput.options == 'Clear':
-	    
+	    try:
+	        return check().form #form attribute of the check instance
+	    except ConnectionError:   
+		return render.internet() #simple template rendered when there is no internet connection
+	elif formInput.options == 'Clear': 
 	    clearCsv()
 class update:
     def __init__(self):
@@ -80,18 +82,28 @@ class check:
     def __init__(self):
         self.display =  csvToDict()
     	self.graph = self.plot_src(self.listToDict(self.display)) 
-        self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
-
+	self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
     def listToDict(self,l): #converts list of dictionaries into a dictionary
         return {datetime.datetime.strptime(k,'%Y-%m-%d'):v for d in l for k,v in d.items()}
 
     def plot_src(self,d): #returns the source of the plotted graph
         line = Scatter(
-		x = d.keys(),
-		y = d.values()
+	    x = d.keys(),
+	    y = d.values()
 	)
 	data = Data([line])
-	URL = py.plot(data, filename = 'basic-line',auto_open=False)
+	layout = Layout(
+	    xaxis = XAxis(
+		showgrid=True,
+	    	autorange=True
+	    ),
+	    yaxis=YAxis(
+		showgrid=True,
+		range=[0.0,4.3]
+            ),
+	)        
+	fig = Figure(data=data, layout=layout)
+	URL = py.plot(fig, filename = 'basic-line',auto_open=False)
 	return URL
 
 if __name__=='__main__':
