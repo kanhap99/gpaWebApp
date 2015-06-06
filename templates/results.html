@@ -15,7 +15,7 @@ TODO: Write code that displays dict as table
 	</p>
 	</br></br>
 	<div style="align:center">
-            $if not len(display)> 0 or not len(display[0]) > 0:
+            $if not len(display)> 0:
                 Your progress log is empty </br></br>
 	    $else:
 	        $message
@@ -24,11 +24,18 @@ TODO: Write code that displays dict as table
 		        <th> Date </th>
 		        <th> GPA </th>
 		    </tr>
-		    $for entry in display:
+		    <!--
+		    for entry in display:
                         <tr>
-		            $for date in entry:
-			        <td>$date</td>
-				<td>$entry[date]</td>
+		            for date in entry:
+			        <td>date</td>
+				<td>entry[date]</td>
+			</tr>
+		    -->
+		    $for date,gpa in display.items():
+		        <tr>
+			    <td>$date</td>
+			    <td>$gpa</td>
 			</tr>
 	        </table>
 	</div>

@@ -5,6 +5,7 @@ import csv
 import plotly.plotly as py
 from plotly.graph_objs import *
 from requests.exceptions import *
+
 urls = (
     '/','formpage',
     '/update','update',
@@ -17,8 +18,7 @@ def csvToDict():
     with open('log.csv') as filename:
         reader  = csv.reader(filename,delimiter=',') #fieldnames=['Date','GPA'] 
 	display = [{row[0]:row[1]} for row in reader]
-        return display
-
+	return {k:float(v) for d in display for k,v in d.items()} 
 def clearCsv():
     f = open('log.csv','w+') #truncate the file
     f.close()
@@ -81,11 +81,8 @@ class update:
 class check:
     def __init__(self):
         self.display =  csvToDict()
-    	self.graph = self.plot_src(self.listToDict(self.display)) 
+    	self.graph = self.plot_src(self.display)
 	self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
-    def listToDict(self,l): #converts list of dictionaries into a dictionary
-        return {datetime.datetime.strptime(k,'%Y-%m-%d'):v for d in l for k,v in d.items()}
-
     def plot_src(self,d): #returns the source of the plotted graph
         line = Scatter(
 	    x = d.keys(),
@@ -99,12 +96,13 @@ class check:
 	    ),
 	    yaxis=YAxis(
 		showgrid=True,
-		range=[0.0,4.3]
-            ),
+            	autorange=True
+	    ),
 	)        
 	fig = Figure(data=data, layout=layout)
 	URL = py.plot(fig, filename = 'basic-line',auto_open=False)
 	return URL
+        
 
 if __name__=='__main__':
     app.run()
