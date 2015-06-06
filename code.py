@@ -5,7 +5,7 @@ import csv
 import plotly.plotly as py
 from plotly.graph_objs import *
 from requests.exceptions import *
-
+import collections
 urls = (
     '/','formpage',
     '/update','update',
@@ -17,8 +17,9 @@ render = web.template.render('templates/') #searches for files to render in temp
 def csvToDict():
     with open('log.csv') as filename:
         reader  = csv.reader(filename,delimiter=',') #fieldnames=['Date','GPA'] 
-	display = [{row[0]:row[1]} for row in reader]
-	return {k:float(v) for d in display for k,v in d.items()} 
+	display = [{datetime.datetime.strptime(row[0],'%Y-%m-%d'):float(row[1])} for row in reader]
+	return collections.OrderedDict(sorted({k:v for d in display for k,v in d.items()}.items())) #using OrderedDict to preserve the order of the dates
+
 def clearCsv():
     f = open('log.csv','w+') #truncate the file
     f.close()
@@ -84,11 +85,12 @@ class check:
     	self.graph = self.plot_src(self.display)
 	self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
     def plot_src(self,d): #returns the source of the plotted graph
-        line = Scatter(
+        """line = Scatter(
 	    x = d.keys(),
 	    y = d.values()
-	)
-	data = Data([line])
+	)"""
+	trace = dict(x=d.keys(),y=d.values())
+	data = [trace]
 	layout = Layout(
 	    xaxis = XAxis(
 		showgrid=True,
