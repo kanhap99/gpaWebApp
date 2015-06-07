@@ -43,13 +43,12 @@ class formpage:
 	        return check().form #form attribute of the check instance
 	    except ConnectionError:   
 		return render.internet() #simple template rendered when there is no internet connection
-	elif formInput.options == 'Clear': 
+	elif formInput.options == 'Clear':
 	    clearCsv()
 class update:
     def __init__(self):
         self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0} 
 	self.n = 8 #number of subjects
-	self.table = dict()
   
     def calculate(self,scores):
         gpa = round(sum([self.grades[x] for x in scores])/self.n, 2) #round to the second precision point
@@ -64,7 +63,7 @@ class update:
         data = web.input(score=[])
 	scores = data.score #gets the array of scores
 	if '' in scores: #no scores given
-            return render.updateForm(7,self.grades.keys(),"Please fill in all fields")
+            return render.updateForm(self.n,self.grades.keys(),"Please fill in all fields")
 	else:
             count=0
 	    for score in scores:
@@ -84,12 +83,9 @@ class check:
         self.display =  csvToDict()
     	self.graph = self.plot_src(self.display)
 	self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
-    def plot_src(self,d): #returns the source of the plotted graph
-        """line = Scatter(
-	    x = d.keys(),
-	    y = d.values()
-	)"""
-	trace = dict(x=d.keys(),y=d.values())
+    
+    def plot_src(self,d): #returns the url of the graph as a string
+	trace = dict(x=d.keys(),y=d.values()) #plotly dictionary differs from python dictionary
 	data = [trace]
 	layout = Layout(
 	    xaxis = XAxis(
