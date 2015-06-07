@@ -45,6 +45,7 @@ class formpage:
 		return render.internet() #simple template rendered when there is no internet connection
 	elif formInput.options == 'Clear':
 	    clearCsv()
+	    return """<p>Progress log was cleared successfully</p> </br></br> <a href="/"> Return to the main page </a>"""
 class update:
     def __init__(self):
         self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0} 
