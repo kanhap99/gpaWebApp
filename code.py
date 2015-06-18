@@ -16,13 +16,15 @@ render = web.template.render('templates/') #searches for files to render in temp
  
 def csvToDict():
     with open('log.csv') as filename:
-        reader  = csv.reader(filename,delimiter=',') #fieldnames=['Date','GPA'] 
-	display = [{datetime.datetime.strptime(row[0],'%Y-%m-%d'):float(row[1])} for row in reader]
-	return collections.OrderedDict(sorted({k:v for d in display for k,v in d.items()}.items())) #using OrderedDict to preserve the order of the dates
+        reader  = csv.reader(filename) #fieldnames=['Date','GPA'] 
+	return [{row[0]:float(row[1])} for row in reader] #storing it as a list of dictionaries will allow the user to update his gpa more than once in a day
 
 def clearCsv():
     f = open('log.csv','w+') #truncate the file
     f.close()
+
+def listToDict(l):
+    return collections.OrderedDict(sorted({k:v for d in l for k,v in d.items()}.items()))
 
 class formpage:
     def __init__(self):
@@ -44,8 +46,9 @@ class formpage:
 	    except ConnectionError:   
 		return render.internet() #simple template rendered when there is no internet connection
 	elif formInput.options == 'Clear':
+	    #show flash message code here for confirmation
 	    clearCsv()
-	    return """<p>Progress log was cleared successfully</p> </br></br> <a href="/"> Return to the main page </a>"""
+	    return '<p>Progress log was cleared successfully</p> </br></br> <a href="/"> Return to the main page </a>'
 class update:
     def __init__(self):
         self.grades = {'A*':4.3,'A':4.0,'B':3.0,'C':2.0,'D':1.0,'F':0.0} 
@@ -63,25 +66,15 @@ class update:
     def POST(self):
         data = web.input(score=[])
 	scores = data.score #gets the array of scores
-	if '' in scores: #no scores given
-            return render.updateForm(self.n,self.grades.keys(),"Please fill in all fields")
-	else:
-            count=0
-	    for score in scores:
-	        if score not in self.grades.keys():
-		    count +=1
-	    if count>0: #some entries are not valid
-	        return render.updateForm(7,self.grades.keys(),'One or more of the scores were invalid letter grades')
-	    else:
-	        gpa = self.calculate(scores)
-		date = datetime.date.today() #the date on which it is accessed
-		self.add([date,gpa]) #add log as date,gpa pair
-		display = csvToDict() #create dict to display as a table of results
-		return render.results(gpa,display,'Your updated Progress table is:',None)
+	gpa = self.calculate(scores)
+	date = datetime.date.today() #the date on which it is accessed
+	self.add([date,gpa]) #add log as date,gpa pair
+	display = listToDict(csvToDict()) #create dict to display as a table of results
+	return render.results(gpa,display,'Your updated Progress table is:',None)
 
 class check:
     def __init__(self):
-        self.display =  csvToDict()
+        self.display =  listToDict(csvToDict())
     	self.graph = self.plot_src(self.display)
 	self.form = render.results(None,self.display,'Your progress table is:',self.graph+'.embed') 
     
@@ -105,3 +98,4 @@ class check:
 
 if __name__=='__main__':
     app.run()
+    

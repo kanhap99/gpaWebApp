@@ -4,7 +4,7 @@ $#n = number of subjects, l=list of grade names
 <html>
     <head>
         <title> Update score log </title>
-	<link rel="stylesheet" type="text/css" href="formStyle.css">
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     </head>
     
     <body>
@@ -13,14 +13,39 @@ $#n = number of subjects, l=list of grade names
 	$if err:
 	    <p style="color:red"> $err </p>
 	</br>
-	<form action="/update" method="POST">
+	<form name="update" action="/update" method="POST" onsubmit="return validation();">
 	    $for i in range(1,n+1):
 	        Subject $i:
                 <input name="score" type="text" autocomplete="off">
-	        </br></br>
+		</br></br>
 	    </br>
 	    <input id = "opt" type="submit" value="Update"> <a href="/"><input id="opt" type="button" value="Cancel"></a>
 	</br>
 	</br>
+	<script type="text/javascript">
+	    function validation() {
+		var scores = document.getElementsByName("score");
+		var GRADES = ["A*","A","B","C","D","F"];
+	    	for (var i =0; i < scores.length; i++) {
+		    var current = scores[i].value;
+		    if (!current) { //field has been left blank
+			alert("Please enter all textfields");
+		        return false;
+		    }
+		    else{
+			var count = 0;
+			for (var j = 0; j < GRADES.length; j++) {
+			    if (GRADES[j] != current) 
+			        count++;
+			}
+			if (count === 6) { //does not match any of the 6 letter grades
+			    alert("One or more of the letter grades entered were invalid, try again.");
+			    return false;
+			}
+		    }
+		}
+		return true;
+	    }
+	</script>
     </body>
 </html>
