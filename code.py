@@ -67,7 +67,7 @@ class update:
         data = web.input(score=[])
 	scores = data.score #gets the array of scores
 	gpa = self.calculate(scores)
-	date = datetime.date.today() #the date on which it is accessed
+	date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') #the date on which it is accessed
 	self.add([date,gpa]) #add log as date,gpa pair
 	display = listToDict(csvToDict()) #create dict to display as a table of results
 	return render.results(gpa,display,'Your updated Progress table is:',None)
@@ -84,11 +84,11 @@ class check:
 	layout = Layout(
 	    xaxis = XAxis(
 		showgrid=True,
-	    	autorange=True
+		autorange=True
 	    ),
 	    yaxis=YAxis(
 		showgrid=True,
-            	autorange=True
+		range=[2.0,4.3]
 	    ),
 	)        
 	fig = Figure(data=data, layout=layout)
